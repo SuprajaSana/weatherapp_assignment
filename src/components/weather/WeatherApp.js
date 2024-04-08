@@ -25,6 +25,16 @@ const WeatherApp = () => {
         let response = await fetch(url);
         let data = await response.json();
 
+        const humidity = document.getElementsByClassName("humidity-percent");
+        const wind = document.getElementsByClassName("wind-speed");
+        const temp = document.getElementsByClassName("weather-temp");
+        const location = document.getElementsByClassName("weather-location");
+
+        humidity[0].innerHTML = data.main.humidity + "%";
+        wind[0].innerHTML = data.wind.speed + " km/h";
+        temp[0].innerHTML = data.main.temp + "°c";
+        location[0].innerHTML = data.name;
+
         console.log(data);
 
     }
@@ -32,7 +42,13 @@ const WeatherApp = () => {
   return (
     <div className="container">
       <div className="top-bar">
-        <input type="text" className="city" placeholder="Search" value={city} onChange={(e)=>setCity(e.target.value)}></input>
+        <input
+          type="text"
+          className="city"
+          placeholder="Search"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        ></input>
         <div className="search-icon" onClick={searchHandler}>
           <img src={search_icon} alt=""></img>
         </div>
@@ -40,8 +56,8 @@ const WeatherApp = () => {
       <div className="weather-image">
         <img src={cloud_icon} alt=""></img>
       </div>
-      <div className="weather-temp">20C</div>
       <div className="weather-location">London</div>
+      <div className="weather-temp">20°c</div>
       <div className="data-container">
         <div className="element">
           <img src={humidity_icon} alt="" className="icon"></img>
