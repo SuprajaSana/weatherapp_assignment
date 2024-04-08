@@ -12,12 +12,21 @@ import wind_icon from "../assets/wind.png";
 
 const WeatherApp = () => {
   const [city, setCity] = useState("");
+
+    let api_key = "aaaec2812127b9cec84690f1a0eb7a2d";
     
-    const searchHandler = () => {
+    const searchHandler = async() => {
         if (city === "") {
             return 0;
         }
-        console.log(city);
+       
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}`;
+
+        let response = await fetch(url);
+        let data = await response.json();
+
+        console.log(data);
+
     }
 
   return (
