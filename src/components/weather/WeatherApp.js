@@ -12,32 +12,64 @@ import wind_icon from "../assets/wind.png";
 
 const WeatherApp = () => {
   const [city, setCity] = useState("");
+  const [wicon, setWicon] = useState(cloud_icon);
 
-    let api_key = "aaaec2812127b9cec84690f1a0eb7a2d";
-    
-    const searchHandler = async() => {
-        if (city === "") {
-            return 0;
-        }
-       
-        let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}`;
+  let api_key = "aaaec2812127b9cec84690f1a0eb7a2d";
 
-        let response = await fetch(url);
-        let data = await response.json();
-
-        const humidity = document.getElementsByClassName("humidity-percent");
-        const wind = document.getElementsByClassName("wind-speed");
-        const temp = document.getElementsByClassName("weather-temp");
-        const location = document.getElementsByClassName("weather-location");
-
-        humidity[0].innerHTML = data.main.humidity + "%";
-        wind[0].innerHTML = data.wind.speed + " km/h";
-        temp[0].innerHTML = data.main.temp + "°c";
-        location[0].innerHTML = data.name;
-
-        console.log(data);
-
+  const searchHandler = async () => {
+    if (city === "") {
+      return 0;
     }
+
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${api_key}`;
+
+    try {
+      let response = await fetch(url);
+      let data = await response.json();
+
+      const humidity = document.getElementsByClassName("humidity-percent");
+      const wind = document.getElementsByClassName("wind-speed");
+      const temp = document.getElementsByClassName("weather-temp");
+      const location = document.getElementsByClassName("weather-location");
+
+      humidity[0].innerHTML = data.main.humidity + "%";
+      wind[0].innerHTML = Math.floor(data.wind.speed) + " km/h";
+      temp[0].innerHTML = Math.floor(data.main.temp) + "°c";
+      location[0].innerHTML = data.name;
+
+      if (data.weather[0].icon === "01d" || data.weather[0].icon === "01n") {
+        setWicon(clear_icon);
+      } else if (
+        data.weather[0].icon === "02d" ||
+        data.weather[0].icon === "02n"
+      ) {
+        setWicon(cloud_icon);
+      } else if (
+        data.weather[0].icon === "03d" ||
+        data.weather[0].icon === "03n" ||
+        data.weather[0].icon === "04d" ||
+        data.weather[0].icon === "04n"
+      ) {
+        setWicon(drizzle_icon);
+      } else if (
+        data.weather[0].icon === "09d" ||
+        data.weather[0].icon === "09n" ||
+        data.weather[0].icon === "10d" ||
+        data.weather[0].icon === "10n"
+      ) {
+        setWicon(rain_icon);
+      } else if (
+        data.weather[0].icon === "13d" ||
+        data.weather[0].icon === "13n"
+      ) {
+        setWicon(snow_icon);
+      } else {
+        setWicon(clear_icon);
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
 
   return (
     <div className="container">
@@ -54,10 +86,10 @@ const WeatherApp = () => {
         </div>
       </div>
       <div className="weather-image">
-        <img src={cloud_icon} alt=""></img>
+        <img src={wicon} alt=""></img>
       </div>
-      <div className="weather-location">London</div>
       <div className="weather-temp">20°c</div>
+      <div className="weather-location">London</div>
       <div className="data-container">
         <div className="element">
           <img src={humidity_icon} alt="" className="icon"></img>
