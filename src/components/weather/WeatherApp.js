@@ -12,7 +12,12 @@ import wind_icon from "../assets/wind.png";
 
 const WeatherApp = () => {
   const [city, setCity] = useState("");
-  const [wicon, setWicon] = useState(cloud_icon);
+  const [wicon, setWicon] = useState();
+  const [show, setShow] = useState(false);
+  const [humidity, setHumidity] = useState();
+  const [wind, setWind] = useState();
+  const [temp, setTemp] = useState();
+  const [location, setLocation] = useState();
 
   let api_key = "aaaec2812127b9cec84690f1a0eb7a2d";
 
@@ -27,15 +32,22 @@ const WeatherApp = () => {
       let response = await fetch(url);
       let data = await response.json();
 
+      setShow(true);
+
       const humidity = document.getElementsByClassName("humidity-percent");
       const wind = document.getElementsByClassName("wind-speed");
       const temp = document.getElementsByClassName("weather-temp");
       const location = document.getElementsByClassName("weather-location");
 
-      humidity[0].innerHTML = data.main.humidity + "%";
-      wind[0].innerHTML = Math.floor(data.wind.speed) + " km/h";
-      temp[0].innerHTML = Math.floor(data.main.temp) + "°c";
-      location[0].innerHTML = data.name;
+      //   humidity[0].innerHTML = data.main.humidity + "%";
+      //   wind[0].innerHTML = Math.floor(data.wind.speed) + " km/h";
+      //   temp[0].innerHTML = Math.floor(data.main.temp) + "°c";
+      //   location[0].innerHTML = data.name;
+
+      setHumidity(data.main.humidity + "%");
+      setWind(Math.floor(data.wind.speed) + " km/h");
+      setTemp(Math.floor(data.main.temp) + "°c");
+      setLocation(data.name);
 
       if (data.weather[0].icon === "01d" || data.weather[0].icon === "01n") {
         setWicon(clear_icon);
@@ -88,21 +100,21 @@ const WeatherApp = () => {
       <div className="weather-image">
         <img src={wicon} alt=""></img>
       </div>
-      <div className="weather-temp">20°c</div>
-      <div className="weather-location">London</div>
+      <div className="weather-temp">{temp}</div>
+      <div className="weather-location">{location}</div>
       <div className="data-container">
         <div className="element">
-          <img src={humidity_icon} alt="" className="icon"></img>
+          {show && <img src={humidity_icon} alt="" className="icon"></img>}
           <div className="data">
-            <div className="humidity-percent">64%</div>
-            <div className="text">Humidity</div>
+            <div className="humidity-percent">{humidity}</div>
+            {show && <div className="text">Humidity</div>}
           </div>
         </div>
         <div className="element">
-          <img src={wind_icon} alt="" className="icon"></img>
+          {show && <img src={wind_icon} alt="" className="icon"></img>}
           <div className="data">
-            <div className="wind-speed">18 km/h</div>
-            <div className="text">Wind Speed</div>
+            <div className="wind-speed">{wind}</div>
+            {show && <div className="text">Wind Speed</div>}
           </div>
         </div>
       </div>
